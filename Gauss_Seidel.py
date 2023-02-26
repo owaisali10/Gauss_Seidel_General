@@ -50,6 +50,9 @@ def takeInput():
     # Input Matrix size
     print("Number of unknowns?:", end=' ')
     m = int(input())
+    if m < 1:
+        print ("Does not make sense. Try again!")
+        main()
     # Example values:
     #a11, a12, b1 = 4, 1, 10
     #a21, a22, b2 = 2, 3, 14
@@ -72,29 +75,32 @@ def exactSolution(A, B):
     Xe = np.matmul(np.linalg.inv(A),B)
     return Xe
 
-# Code begins
-A, B, tol = takeInput()
-print("Press 'Y' to continue 'N' to re-insert coefficients")
-str = input()
-X0 = []
-if (str == "Y" or str == "y"):
-    ddm = isDdm(A,len(B))
-    if ddm == True:
-        print("Initial guesses?")
-        for i in range(len(B)):
-            print(f"x{i+1}_initial:",end='')
-            X0.append(float(input()))
-        X, n = doIteration(X0, A, B, tol)
-        print(f"Gauss-Seidel iteration with a tolerance of {tol} gives solution:")
-        for i in range(len(B)):
-            print(f"X{i}={X[i]},",end=' ')
-        print(f" in {n} iterations")
-        Xe = exactSolution(A, B)
-        print("Compared to Exact Solution:")
-        for i in range(len(B)):
-            print(f"X{i}={Xe[i]},",end=' ')
+def main():
+    A, B, tol = takeInput()
+    print("Press 'Y' to continue 'N' to re-insert coefficients")
+    str = input()
+    X0 = []
+    if (str == "Y" or str == "y"):
+        ddm = isDdm(A,len(B))
+        if ddm == True:
+            print("Initial guesses?")
+            for i in range(len(B)):
+                print(f"x{i+1}_initial:",end='')
+                X0.append(float(input()))
+            X, n = doIteration(X0, A, B, tol)
+            print(f"Gauss-Seidel iteration with a tolerance of {tol} gives solution:")
+            for i in range(len(B)):
+                print(f"X{i}={X[i]},",end=' ')
+            print(f" in {n} iterations")
+            Xe = exactSolution(A, B)
+            print("Compared to Exact Solution:")
+            for i in range(len(B)):
+                print(f"X{i}={Xe[i]},",end=' ')
+        else:
+            print("Not Strictly Diagonally Dominant. Cannot solve!")
+            quit()
     else:
-        print("Not Strictly Diagonally Dominant. Cannot solve!")
-        quit()
-else:
-    takeInput()
+        takeInput()
+
+# Code begins
+main()
